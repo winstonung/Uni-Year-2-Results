@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 24px;
+      color: #1f2937;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .module {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .module h2 {
+      margin-top: 0;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    label {
+      min-width: 220px;
+      font-weight: 600;
+    }
+
+    input[type="tel"] {
+      width: 80px;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-group label {
+      min-width: auto;
+      font-weight: normal;
+      background: #e5e7eb;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    .results {
+      margin-top: 16px;
+      padding: 12px;
+      background: #eef2ff;
+      border-radius: 12px;
+    }
+
+    .result-line {
+      margin: 6px 0;
+    }
+
+    .impossible {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    .achieved {
+      color: #059669;
+      font-weight: bold;
+    }
+
+    .invalid {
+      border: 2px solid #dc2626;
+      background-color: #fee2e2;
+    }
+
+    @media (max-width: 600px) {
+      .input-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+  </style>
+</head>
+<body>
+  <h1>🎓 Exam Requirement Calculator 📚</h1>
+
+  <div id="modules"></div>
+
+  <script>
+    // function resultHTML(current, examWeight) {
+    //   const targets = [40, 60, 70];
+    //   let html = '<div class="results">';
+
+    //   targets.forEach(target => {
+    //     const needed = Math.ceil(((target - current) / examWeight) * 100);
+
+    //     if (needed <= 0) {
+    //       html += `<div class="result-line achieved">✅ Already guaranteed ${target}% overall</div>`;
+    //     } else if (needed > 100) {
+    //       html += `<div class="result-line impossible">❌ Need ${needed}% in the exam for ${target}% overall</div>`;
+    //     } else {
+    //       html += `<div class="result-line">Need <strong>${needed}%</strong> in the final exam for <strong>${target}%</strong> overall</div>`;
+    //     }
+    //   });
+
+    //   html += '</div>';
+    //   return html;
+    // }
+
+    function resultHTML(coursework, grade, examWeight) {
+        let lowerbound = Math.round(grade) - 0.5;
+        let upperbound = Math.round(grade) + 0.4;
+
+        coursework = Math.round(coursework * 10) / 10;
+
+        lowerbound = Math.ceil((lowerbound - coursework) / (examWeight / 100));
+        upperbound = Math.floor((upperbound - coursework) / (examWeight / 100));
+
+        console.log(lowerbound);
+        console.log(upperbound);
+
+        let html = '<div class="results">';
+        if (lowerbound < 0) {
+            html += `<div class="result-line impossible">❌ Minimum grade should be ${Math.round(coursework)}</div>`
+        }
+        else if (lowerbound == upperbound) {
+            html += `<div class="result-line">Scored ${lowerbound}% in the exam.`
+        } else {
+            html += `<div class="result-line">Scored ${lowerbound}% - ${upperbound}% in the exam.`
+        }
+        html += '</div>';
+        return html;
+    }
+
+    function createNumberInput(id, labelText, max = 100) {
+      return `
+        <div class="row">
+          <label for="${id}">${labelText}</label>
+          <div class="input-group">
+          <input type="tel" id="${id}" min="0" max="${max}" value="0"><p>/${max}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    const container = document.getElementById('modules');
+
+    container.innerHTML = `
+      <div class="module" id="cs2800">
+        <h2>CS2800 - Software Engineering</h2>
+        ${createNumberInput('cs2800-cw1', 'CW1 (10%)')}
+        ${createNumberInput('cs2800-cw2', 'CW2 (30%)')}
+        ${createNumberInput('cs2800-grade', 'Grade')}
+        <div id="cs2800-results"></div>
+      </div>
+
+      <div class="module" id="cs2850">
+        <h2>CS2850 - Operating Systems</h2>
+        <p><strong>Lab Quizzes</strong> (complete 8+ for full 10%)</p>
+        <div class="checkbox-group" id="cs2850-labs"></div>
+        ${createNumberInput('cs2850-lab', 'Number of Labs Completed', 10)}
+        ${createNumberInput('cs2850-theory', 'Average Theory Quiz Mark')}
+        ${createNumberInput('cs2850-cpu', 'CPU Scheduler CW (20%)')}
+        ${createNumberInput('cs2850-grade', 'Grade')}
+        <div id="cs2850-results"></div>
+      </div>
+
+      <div class="module" id="cs2855">
+        <h2>CS2855 - Databases</h2>
+        ${createNumberInput('cs2855-cw1', 'CW1 (8%)')}
+        ${createNumberInput('cs2855-cw2', 'CW2 (8%)')}
+        ${createNumberInput('cs2855-cw3', 'CW3 (14%)')}
+        ${createNumberInput('cs2855-grade', 'Grade')}
+        <div class="row">
+          <label><input type="checkbox" id="cs2855-deduction"> I received a 10% deduction</label>
+        </div>
+        <div id="cs2855-results"></div>
+      </div>
+
+      <div class="module" id="iy2760">
+        <h2>IY2760 - Information Security</h2>
+        ${createNumberInput('iy2760-a', 'Quiz A (15%)')}
+        ${createNumberInput('iy2760-b', 'Quiz B (15%)')}
+        ${createNumberInput('iy2760-grade', 'Grade')}
+        <div id="iy2760-results"></div>
+      </div>
+
+      <div class="module" id="cs2860">
+        <h2>CS2860 - Algorithms and Complexity</h2>
+        <div id="cs2860-quizzes"></div>
+        ${createNumberInput('cs2860-theory', 'Average Quiz Mark (%)')}
+        ${createNumberInput('cs2860-grade', 'Grade')}
+        <div id="cs2860-results"></div>
+      </div>
+
+      <div class="module" id="cs2900">
+        <h2>CS2900 - MDDP</h2>
+        ${createNumberInput('cs2900-test1', 'Test 1', 10)}
+        ${createNumberInput('cs2900-test2', 'Test 2', 10)}
+        ${createNumberInput('cs2900-test3', 'Test 3', 10)}
+        ${createNumberInput('cs2900-test4', 'Test 4', 10)}
+        ${createNumberInput('cs2900-grade', 'Grade')}
+        <div id="cs2900-results"></div>
+      </div>
+
+      <div class="module" id="cs2910">
+        <h2>CS2910 - Symbolic AI</h2>
+        ${createNumberInput('cs2910-quiz', 'Quiz (20%)')}
+        ${createNumberInput('cs2910-cw', 'Coursework (20%)')}
+        ${createNumberInput('cs2910-grade', 'Grade')}
+        <div id="cs2910-results"></div>
+      </div>
+
+      <div class="module" id="iy2840">
+        <h2>IY2840 - Computer and Network Security</h2>
+        ${createNumberInput('iy2840-report', 'Report', 50)}
+        ${createNumberInput('iy2840-lab1', 'Assessed Lab 1', 10)}
+        ${createNumberInput('iy2840-lab2', 'Assessed Lab 2', 10)}
+        ${createNumberInput('iy2840-lab3', 'Assessed Lab 3', 15)}
+        ${createNumberInput('iy2840-grade', 'Grade')}
+        <div id="iy2840-results"></div>
+      </div>
+    `;
+
+    function calculate() {
+
+      // Validate all inputs
+      document.querySelectorAll('input[type="tel"]').forEach(input => {
+        const max = parseFloat(input.max) || 100;
+        const value = parseFloat(input.value) || 0;
+
+        if (value > max) {
+          input.classList.add('invalid');
+        } else {
+          input.classList.remove('invalid');
+        }
+      });
+
+      // CS2800
+      let cw1 = +document.getElementById('cs2800-cw1').value * 0.10;
+      let cw2 = +document.getElementById('cs2800-cw2').value * 0.30;
+      let gradecs2800 = +document.getElementById('cs2800-grade').value;
+      document.getElementById('cs2800-results').innerHTML = resultHTML(cw1 + cw2, gradecs2800, 60);
+
+      // CS2850
+      let labMark = +document.getElementById('cs2850-lab').value;
+      if (labMark >= 8) {
+        labMark = 10;
+      }
+      const theory = +document.getElementById('cs2850-theory').value * 0.10;
+      const cpu = +document.getElementById('cs2850-cpu').value * 0.20;
+      let gradecs2850 = +document.getElementById('cs2850-grade').value;
+      document.getElementById('cs2850-results').innerHTML = resultHTML(labMark + theory + cpu, gradecs2850, 60);
+
+      // CS2855
+      let db = (+document.getElementById('cs2855-cw1').value * 0.08) +
+                 (+document.getElementById('cs2855-cw2').value * 0.08) +
+                 (+document.getElementById('cs2855-cw3').value * 0.14);
+        
+      if (document.getElementById('cs2855-deduction').checked) {
+        db *= 0.9;
+      }
+      let gradecs2855 = +document.getElementById('cs2850-grade').value;
+      document.getElementById('cs2855-results').innerHTML = resultHTML(db, gradecs2855, 70);
+
+      // IY2760
+      const infoSec = (+document.getElementById('iy2760-a').value * 0.15) +
+                      (+document.getElementById('iy2760-b').value * 0.15);
+      let gradeiy2760 = +document.getElementById('cs2850-grade').value;
+      document.getElementById('iy2760-results').innerHTML = resultHTML(infoSec, gradeiy2760, 70);
+
+      // CS2860
+      const cs2860quiz = +document.getElementById('cs2860-theory').value * 0.20;
+      let gradecs2860 = +document.getElementById('cs2850-grade').value;
+      document.getElementById('cs2860-results').innerHTML = resultHTML(cs2860quiz, gradecs2860, 80);
+
+      // CS2900
+      const tests = [1,2,3,4].map(i => +document.getElementById(`cs2900-test${i}`).value);
+      tests.sort((a,b) => b - a);
+      const best3 = tests.slice(0,3).reduce((a,b) => a + b, 0);
+      const mddp = (best3 / 30) * 30;
+      let gradecs2900 = +document.getElementById('cs2900-grade').value;
+      document.getElementById('cs2900-results').innerHTML = resultHTML(mddp, gradecs2900, 70);
+
+      // CS2910
+      const ai = (+document.getElementById('cs2910-quiz').value * 0.20) +
+                 (+document.getElementById('cs2910-cw').value * 0.20);
+      let gradecs2910 = +document.getElementById('cs2850-grade').value;
+      document.getElementById('cs2910-results').innerHTML = resultHTML(ai, gradecs2910, 60);
+
+      // IY2840
+      const netSec = (+document.getElementById('iy2840-report').value /50 * 10) +
+                     ((+document.getElementById('iy2840-lab1').value / 10) * 10) +
+                     ((+document.getElementById('iy2840-lab2').value / 10) * 10) +
+                     ((+document.getElementById('iy2840-lab3').value / 15) * 10);
+      let gradeiy2840 = +document.getElementById('cs2850-grade').value;
+      document.getElementById('iy2840-results').innerHTML = resultHTML(netSec, gradeiy2840, 60);
+    }
+
+    document.addEventListener('input', calculate);
+    calculate();
+  </script>
+</body>
+</html>
