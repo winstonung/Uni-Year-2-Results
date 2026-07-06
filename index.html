@@ -127,9 +127,9 @@
 
     function resultHTML(coursework, grade, examWeight) {
         let lowerbound = Math.round(grade) - 0.5;
-        let upperbound = Math.round(grade) + 0.4;
+        let upperbound = Math.round(grade) + 0.49;
 
-        coursework = Math.round(coursework * 10) / 10;
+        coursework = Math.round(coursework);
 
         lowerbound = Math.ceil((lowerbound - coursework) / (examWeight / 100));
         upperbound = Math.floor((upperbound - coursework) / (examWeight / 100));
@@ -138,23 +138,22 @@
         console.log(upperbound);
 
         let html = '<div class="results">';
+        html += `Component scored ${coursework}%`
         if (lowerbound < 0) {
             html += `<div class="result-line impossible">❌ Minimum grade should be ${Math.round(coursework)}`
         }
         else if (lowerbound == upperbound) {
             if (lowerbound > 100) {
-                html += `<div class="result-line impossible">❌ `
+                html += `<div class="result-line impossible">❌ Scored ${lowerbound}% in the exam.`
             } else {
-                html += `<div class="result-line">`
+                html += `<div class="result-line">Scored <strong>${lowerbound}%</strong> in the exam.`
             }
-            html += `Scored ${lowerbound}% in the exam.`
         } else {
             if (lowerbound > 100) {
-                html += `<div class="result-line impossible">❌ `
+                html += `<div class="result-line impossible">❌ Scored ${lowerbound}% - ${upperbound}% in the exam.`
             } else {
-                html += `<div class="result-line">`
+                html += `<div class="result-line">Scored <strong>${lowerbound}% - ${upperbound}%</strong> in the exam.`
             }
-            html += `Scored ${lowerbound}% - ${upperbound}% in the exam.`
         }
         html += '</div>';
         return html;
