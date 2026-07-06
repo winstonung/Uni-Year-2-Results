@@ -283,18 +283,18 @@
       if (document.getElementById('cs2855-deduction').checked) {
         db *= 0.9;
       }
-      let gradecs2855 = +document.getElementById('cs2850-grade').value;
+      let gradecs2855 = +document.getElementById('cs2855-grade').value;
       document.getElementById('cs2855-results').innerHTML = resultHTML(db, gradecs2855, 70);
 
       // IY2760
       const infoSec = (+document.getElementById('iy2760-a').value * 0.15) +
                       (+document.getElementById('iy2760-b').value * 0.15);
-      let gradeiy2760 = +document.getElementById('cs2850-grade').value;
+      let gradeiy2760 = +document.getElementById('iy2760-grade').value;
       document.getElementById('iy2760-results').innerHTML = resultHTML(infoSec, gradeiy2760, 70);
 
       // CS2860
       const cs2860quiz = +document.getElementById('cs2860-theory').value * 0.20;
-      let gradecs2860 = +document.getElementById('cs2850-grade').value;
+      let gradecs2860 = +document.getElementById('cs2860-grade').value;
       document.getElementById('cs2860-results').innerHTML = resultHTML(cs2860quiz, gradecs2860, 80);
 
       // CS2900
@@ -308,7 +308,7 @@
       // CS2910
       const ai = (+document.getElementById('cs2910-quiz').value * 0.20) +
                  (+document.getElementById('cs2910-cw').value * 0.20);
-      let gradecs2910 = +document.getElementById('cs2850-grade').value;
+      let gradecs2910 = +document.getElementById('cs2910-grade').value;
       document.getElementById('cs2910-results').innerHTML = resultHTML(ai, gradecs2910, 60);
 
       // IY2840
@@ -316,7 +316,7 @@
                      ((+document.getElementById('iy2840-lab1').value / 10) * 10) +
                      ((+document.getElementById('iy2840-lab2').value / 10) * 10) +
                      ((+document.getElementById('iy2840-lab3').value / 15) * 10);
-      let gradeiy2840 = +document.getElementById('cs2850-grade').value;
+      let gradeiy2840 = +document.getElementById('iy2840-grade').value;
       document.getElementById('iy2840-results').innerHTML = resultHTML(netSec, gradeiy2840, 60);
     }
 
