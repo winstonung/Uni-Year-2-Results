@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exam Calculator</title>
+  <title>Exam Results Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -100,7 +100,7 @@
   </style>
 </head>
 <body>
-  <h1>🎓 Exam Requirement Calculator 📚</h1>
+  <h1>🎓 Exam Results Calculator 📚</h1>
 
   <div id="modules"></div>
 
@@ -139,12 +139,17 @@
 
         let html = '<div class="results">';
         if (lowerbound < 0) {
-            html += `<div class="result-line impossible">❌ Minimum grade should be ${Math.round(coursework)}</div>`
+            html += `<div class="result-line impossible">❌ Minimum grade should be ${Math.round(coursework)}`
         }
         else if (lowerbound == upperbound) {
             html += `<div class="result-line">Scored ${lowerbound}% in the exam.`
         } else {
-            html += `<div class="result-line">Scored ${lowerbound}% - ${upperbound}% in the exam.`
+            if (lowerbound > 100) {
+                html += `<div class="result-line impossible">❌ `
+            } else {
+                html += `<div class="result-line">`
+            }
+            html += `Scored ${lowerbound}% - ${upperbound}% in the exam.`
         }
         html += '</div>';
         return html;
