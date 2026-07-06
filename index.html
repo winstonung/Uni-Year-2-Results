@@ -142,7 +142,12 @@
             html += `<div class="result-line impossible">❌ Minimum grade should be ${Math.round(coursework)}`
         }
         else if (lowerbound == upperbound) {
-            html += `<div class="result-line">Scored ${lowerbound}% in the exam.`
+            if (lowerbound > 100) {
+                html += `<div class="result-line impossible">❌ `
+            } else {
+                html += `<div class="result-line">`
+            }
+            html += `Scored ${lowerbound}% in the exam.`
         } else {
             if (lowerbound > 100) {
                 html += `<div class="result-line impossible">❌ `
